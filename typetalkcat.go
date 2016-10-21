@@ -21,7 +21,7 @@ type Auth struct {
 var (
 	clientId     = os.Getenv("TYPETALK_API_CLIENT_ID")
 	clientSecret = os.Getenv("TYPETALK_API_CLIENT_SECRET")
-	message      = ""
+	message      string
 )
 
 func main() {
@@ -49,9 +49,9 @@ func main() {
 		message = "```"
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
-			message = message + "\n" + scanner.Text()
+			message += "\n" + scanner.Text()
 		}
-		message = message + "\n```"
+		message += "\n```"
 		topicId := c.String("topicId")
 		resp, err = http.PostForm(
 			fmt.Sprintf("https://typetalk.in/api/v1/topics/%s", topicId),
