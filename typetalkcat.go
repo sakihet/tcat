@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -34,6 +35,9 @@ func main() {
 		},
 	}
 	app.Action = func(c *cli.Context) error {
+		if (clientId == "") || (clientSecret == "") {
+			log.Fatal("env is missing")
+		}
 		resp, err := http.PostForm(
 			"https://typetalk.in/oauth2/access_token",
 			url.Values{
