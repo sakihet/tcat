@@ -46,7 +46,7 @@ func main() {
 				"grant_type":    {"client_credentials"},
 				"scope":         {"topic.post"}})
 		if err != nil {
-			os.Exit(1)
+			log.Fatal("authentication failed")
 		}
 		var d Auth
 		err = json.NewDecoder(resp.Body).Decode(&d)
