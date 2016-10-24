@@ -33,6 +33,10 @@ func main() {
 			Name:  "topicId, t",
 			Usage: "typetalk topic id to post to",
 		},
+		cli.BoolFlag{
+			Name:  "plain, p",
+			Usage: "post message as plain text instead of code blocks",
+		},
 	}
 	app.Action = func(c *cli.Context) error {
 		if (clientId == "") || (clientSecret == "") {
@@ -50,12 +54,15 @@ func main() {
 		}
 		var d Auth
 		err = json.NewDecoder(resp.Body).Decode(&d)
-		message = "```"
+
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
-			message += "\n" + scanner.Text()
+			message += scanner.Text() + "\n"
 		}
-		message += "\n```"
+
+		if !c.Bool("plain") {
+			message = "```\n" + message + "```"
+		}
 		topicId := c.String("topicId")
 		resp, err = http.PostForm(
 			fmt.Sprintf("https://typetalk.in/api/v1/topics/%s", topicId),
