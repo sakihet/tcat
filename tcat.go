@@ -37,6 +37,10 @@ func main() {
 			Name:  "plain, p",
 			Usage: "post message as plain text instead of code blocks",
 		},
+		cli.StringFlag{
+			Name:  "syntax, s",
+			Usage: "post code with syntax highlighting",
+		},
 	}
 	app.Action = func(c *cli.Context) error {
 		if (clientId == "") || (clientSecret == "") {
@@ -61,7 +65,8 @@ func main() {
 		}
 
 		if !c.Bool("plain") {
-			message = "```\n" + message + "```"
+			syntax := c.String("syntax")
+			message = "```" + syntax + "\n" + message + "```"
 		}
 		topicId := c.String("topicId")
 		resp, err = http.PostForm(
