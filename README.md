@@ -1,4 +1,4 @@
-# typetalkcat
+# tcat
 ## Configuration
 ```
 export TYPETALK_API_CLIENT_ID=""
