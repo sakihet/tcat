@@ -7,9 +7,9 @@ export TYPETALK_API_CLIENT_SECRET=""
 ## Build
 ```
 go build
-mv ./typetalkcat /usr/local/bin/ # or somewhere
+mv ./tcat /usr/local/bin/ # or somewhere
 ```
 ## Usage
 ```
-echo -e "hello\ntypetalk" | typetalkcat --topicId 123
+echo -e "hello\ntypetalk" | tcat --topicId 123
 ```
