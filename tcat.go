@@ -53,18 +53,12 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		if c.Bool("configure") {
 			fmt.Printf("input typetalk api client id: ")
-			client_id, hasMoreInLine, err := bufio.NewReader(os.Stdin).ReadLine()
-			if hasMoreInLine != false {
-				log.Fatal(hasMoreInLine)
-			}
+			client_id, _, err := bufio.NewReader(os.Stdin).ReadLine()
 			if err != nil {
 				log.Fatal(err)
 			}
 			fmt.Printf("input typetalk api client secret: ")
-			client_secret, hasMoreInLine, err := bufio.NewReader(os.Stdin).ReadLine()
-			if hasMoreInLine != false {
-				log.Fatal(hasMoreInLine)
-			}
+			client_secret, _, err := bufio.NewReader(os.Stdin).ReadLine()
 			if err != nil {
 				log.Fatal(err)
 			}
