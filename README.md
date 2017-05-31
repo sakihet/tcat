@@ -1,13 +1,13 @@
 # tcat
-## Configuration
-```
-export TYPETALK_API_CLIENT_ID=""
-export TYPETALK_API_CLIENT_SECRET=""
-```
 ## Build
 ```
 go build
 mv ./tcat /usr/local/bin/ # or somewhere
+```
+## Configuration
+tcat uses `$HOME/.tcat` for configuration.
+```
+tcat --configure
 ```
 ## Usage
 ```
