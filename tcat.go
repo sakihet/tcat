@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -19,10 +20,13 @@ type Auth struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+type Client struct {
+	Id     string `json:"client_id"`
+	Secret string `json:"client_secret"`
+}
+
 var (
-	clientId     = os.Getenv("TYPETALK_API_CLIENT_ID")
-	clientSecret = os.Getenv("TYPETALK_API_CLIENT_SECRET")
-	message      string
+	message string
 )
 
 func main() {
@@ -34,6 +38,10 @@ func main() {
 			Usage: "typetalk topic id to post to",
 		},
 		cli.BoolFlag{
+			Name:  "configure",
+			Usage: "configure tcat",
+		},
+		cli.BoolFlag{
 			Name:  "plain, p",
 			Usage: "post message as plain text instead of code blocks",
 		},
@@ -43,6 +51,53 @@ func main() {
 		},
 	}
 	app.Action = func(c *cli.Context) error {
+		if c.Bool("configure") {
+			fmt.Printf("input typetalk api client id: ")
+			client_id, hasMoreInLine, err := bufio.NewReader(os.Stdin).ReadLine()
+			if hasMoreInLine != false {
+				log.Fatal(hasMoreInLine)
+			}
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("input typetalk api client secret: ")
+			client_secret, hasMoreInLine, err := bufio.NewReader(os.Stdin).ReadLine()
+			if hasMoreInLine != false {
+				log.Fatal(hasMoreInLine)
+			}
+			if err != nil {
+				log.Fatal(err)
+			}
+			client := Client{Id: string(client_id), Secret: string(client_secret)}
+			jsonBytes, err := json.Marshal(client)
+			if err != nil {
+				fmt.Println("JSON Marshal error:", err)
+			}
+			fmt.Println(string(jsonBytes))
+			homedir := os.Getenv("HOME")
+			if homedir == "" {
+				log.Fatal(err)
+			}
+			file, err := os.Create(homedir + `/.tcat`)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer file.Close()
+			file.Write(([]byte)(jsonBytes))
+			os.Exit(0)
+		}
+		homedir := os.Getenv("HOME")
+		bytes, err := ioutil.ReadFile(homedir + "/.tcat")
+		if err != nil {
+			log.Fatal(err)
+		}
+		var client Client
+		if err := json.Unmarshal(bytes, &client); err != nil {
+			log.Fatal(err)
+		}
+		clientId := client.Id
+		clientSecret := client.Secret
+
 		if (clientId == "") || (clientSecret == "") {
 			log.Fatal("env is missing")
 		}
